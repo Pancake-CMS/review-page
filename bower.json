@@ -17,6 +17,8 @@
   "dependencies": {
     "polymer": "^1.7.1",
     "polymerfire": "firebase/polymerfire#^0.9.7",
-    "css-grid": "pancake-cms-css-grid#*"
+    "css-grid": "pancake-cms-css-grid#*",
+    "paper-fab": "PolymerElements/paper-fab#^1.2.1",
+    "paper-toast": "PolymerElements/paper-toast#^1.3.0"
   }
 }
