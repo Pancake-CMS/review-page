@@ -1,0 +1,72 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymerfire/firebase-document.html">
+<link rel="import" href="../css-grid/css-grid.html">
+
+<dom-module id="review-page">
+    <template>
+        <style type="text/css">
+            :host {
+                display: none;
+            }
+            :host([active]){
+                display: block;
+            }
+        </style>
+        <firebase-document></firebase-document>
+
+        <css-grid
+            path="/"
+            rawcomponents="[[templatecomponents]]">
+        </css-grid>
+    </template>
+    <script>
+        Polymer({
+            is: 'review-page',
+
+            properties: {
+                templatecomponents: {
+                    type: Object,
+                    notify: true,
+                    reflectToAttribute: false
+                },
+
+                path: {
+                    type: String,
+                    notify: true,
+                    observer: '_pathChanged'
+                },
+            },
+
+            _pathChanged: function() {
+                this.set('templatecomponents', {});
+                this.async( () => {
+                    this.$$('firebase-document').getStoredValue(this.path)
+                    .then((data) => {
+                        this.contentData = data.components;
+                        return this.$$('firebase-document').getStoredValue('/templates/' + data.template);
+                    })
+                    .then((data) => {
+                        var mergedData = this._handleContent(data, this.contentData);
+                        this.set('templatecomponents', mergedData);
+                    });
+                });
+            },
+
+            _handleContent: function(obj1, obj2) {
+                Object.keys(obj2).forEach((key) => {
+                    obj1[key]['content'] = this.contentData[key]['content'];
+                    //future work for nested nodes
+                    // if(!!obj1[key]['components']) {
+                    //     console.log('has inner components in ' + key);
+                    //     Object.keys(obj1[key]['components']).forEach((nestednode) => {
+                    //         console.log(nestednode);
+                    //         this._handleContent(obj1[key]['components'][nestednode], )
+                    //     });
+                    // }
+                });
+
+                return obj1;
+            }
+        })
+    </script>
+</dom-module>
