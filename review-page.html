@@ -45,15 +45,19 @@
                         return this.$$('firebase-document').getStoredValue('/templates/' + data.template);
                     })
                     .then((data) => {
-                        var mergedData = this._handleContent(data, this.contentData);
-                        this.set('templatecomponents', mergedData);
+                        if(!!this.contentData) {
+                            var mergedData = this._handleContent(data, this.contentData);
+                            this.set('templatecomponents', mergedData);
+                        } else {
+                             this.set('templatecomponents', data);
+                        }
                     });
                 });
             },
 
             _handleContent: function(obj1, obj2) {
                 Object.keys(obj2).forEach((key) => {
-                    obj1[key]['usercontent'] = this.contentData[key]['usercontent'] || {};
+                    obj1[key]['usercontent'] = obj2[key]['usercontent'] || {};
 
                     // TODO: future work for nested nodes
                     // if(!!obj1[key]['components']) {
