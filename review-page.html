@@ -38,7 +38,6 @@
             },
 
             _pathChanged: function() {
-                this.set('templatecomponents', {});
                 this.async( () => {
                     this.$$('firebase-document').getStoredValue(this.path)
                     .then((data) => {
@@ -54,8 +53,9 @@
 
             _handleContent: function(obj1, obj2) {
                 Object.keys(obj2).forEach((key) => {
-                    obj1[key]['content'] = this.contentData[key]['content'];
-                    //future work for nested nodes
+                    obj1[key]['usercontent'] = this.contentData[key]['usercontent'] || {};
+
+                    // TODO: future work for nested nodes
                     // if(!!obj1[key]['components']) {
                     //     console.log('has inner components in ' + key);
                     //     Object.keys(obj1[key]['components']).forEach((nestednode) => {
