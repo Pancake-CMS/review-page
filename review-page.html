@@ -56,6 +56,10 @@
             },
 
             _pathChanged: function() {
+                if(!this.path) {
+                    return;
+                }
+
                 this.async( () => {
                     this.$$('firebase-document').getStoredValue(this.path)
                     .then((data) => {
